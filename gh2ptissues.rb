@@ -2,11 +2,11 @@
 
 # Description:  Migrates GitHub Issues to Pivotal Tracker.
 
-GITHUB_ORG = 'APX'
-GITHUB_USER = 'shyam-habarakada'
-GITHUB_REPO = 'APX/benchpress-server'
-GITHUB_LOGIN = 'shyam-habarakada'
-PIVOTAL_PROJECT_ID = 836893
+GITHUB_ORG = 'getkya'
+GITHUB_USER = 'niedfelj'
+GITHUB_REPO = 'getkya/getkya'
+GITHUB_LOGIN = 'niedfelj'
+PIVOTAL_PROJECT_ID = 1560895
 PIVOTAL_PROJECT_USE_SSL = true
 
 GITHUB_PASSWORD = ENV['GITHUB_PASSWORD']
@@ -22,7 +22,7 @@ require 'json'
 # puts ENV['GITHUB_PASSWORD']
 # puts ENV['PIVOTAL_TOKEN']
 
-dry_run = true
+dry_run = false
 
 begin
 
@@ -35,9 +35,9 @@ begin
 
   github = Octokit::Client.new(:login => GITHUB_LOGIN, :password => GITHUB_PASSWORD)
 
-  issues_filter = 'bug' # update filter as appropriate
+  issues_filter = 'open' # update filter as appropriate
 
-  story_type = 'bug' # 'bug', 'feature', 'chore', 'release'. Omitting makes it a feature.
+  story_type = 'feature' # 'bug', 'feature', 'chore', 'release'. Omitting makes it a feature.
 
   story_current_state = 'unscheduled' # 'unscheduled', 'started', 'accepted', 'delivered', 'finished', 'unscheduled'.
                                       # 'unstarted' puts it in 'Current' if Commit Mode is on; 'Backlog' if Auto Mode is on.
@@ -46,7 +46,7 @@ begin
   total_issues = 0 
 
   page_issues = 1
-  issues = github.list_issues(GITHUB_REPO, { :page => page_issues, :labels => issues_filter } )
+  issues = github.list_issues(GITHUB_REPO, { :page => page_issues, :state => 'open', :filter => 'all' } )
 
   while issues.count > 0
 
